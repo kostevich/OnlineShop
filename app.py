@@ -8,6 +8,8 @@ from flask import request
 from flask import redirect
 # Из flask_sqlalchemy импортируем класс SQLAlchemy для работы с бд.
 from flask_sqlalchemy import SQLAlchemy
+# Из cloudipsp импортируем Api, Checkout для работы кнопки оплаты.
+from cloudipsp import Api, Checkout
 
 
 # Создадим объект класса Flask с именем файла.
@@ -44,6 +46,25 @@ def mainpage():
     # Возвращение шаблон html на страницу.
     return render_template('mainpage.html', items = items) 
 
+# Начало работы функции buy_product при переходе по ссылке.
+@app.route('/buy_product/<int:id>')
+# Функция, выводящая на страницу страницу оплаты.
+def buy_product(id):
+    # Сохраняем объект, в котором находится данные выбранного товара.
+    item = Item.query.get(id)
+    # Передаем объекту класса Api данные продавца и секретный ключ.
+    api = Api(merchant_id=1531733,
+          secret_key='j42hKroTARZebzlXvaQAByiBPKCYT0lq')
+    # Создаем объект класса Checkout и передаем туда данные продавца.
+    checkout = Checkout(api=api)
+    # Cохраняем словарь с ценой выбранного товара и валютой.
+    data = {
+    "currency": "BYN",
+    "amount": str(item.price)+"00"}
+    # Формируем ссылку с оплатой товара.
+    url = checkout.url(data).get('checkout_url')
+    # Переадресация на страницу оплаты.
+    return redirect(url)
 
 # Начало работы функции create_product при переходе по ссылке.
 @app.route('/createproduct', methods = ['POST', 'GET'])
@@ -65,7 +86,7 @@ def create_product():
             db.session.add(item)
             # Сохранение в базе данных.
             db.session.commit()
-            # Возвращение на страницу со всеми статьями.
+            # Переадресация на страницу со всеми статьями.
             return redirect('/mainpage')
         # Исключение.
         except:
