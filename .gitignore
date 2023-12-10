@@ -1,3 +1,5 @@
+# Program files
+__pycache__
 
-__pycache__/app.cpython-311.pyc
-instance/shop.db
+# Confidential files
+instance/Shop.db
