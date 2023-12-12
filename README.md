@@ -49,7 +49,7 @@ pip install -r requirements.txt
 
 ![image](https://github.com/kostevich/OnlineShop/assets/109979502/8229d9bc-6b6c-4a17-81c4-bbe4af62d08c)
 
-# Известные проблемы.
+# Известные проблемы
 В некоторых странах для корректной работы оплаты необходимо воспользоваться vpn.
 
 _Copyright © Kostevich Irina. 2023._
